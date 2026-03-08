@@ -21,7 +21,7 @@ g++ -std=c++17 -O2 -Wall *.cpp -o simulator.exe
 .\simulator.exe ..\asm\bubble_sort.asm ..\config.cfg
 
 
-
+##
 Minutes of Meeting :
 Date: 08-Mar-2026
 Members: Hemanth, Santhosh, Jaswanth
@@ -58,3 +58,4 @@ Accomplished: Read through the Phase 1 project document and RISC-V manual.
 Decisions: Chose C++ as our programming language for its performance and OOP features. Created the private GitHub repository early to avoid last-minute merge conflicts.
 Tasks: Everyone to review the standard 5-stage pipeline diagram and understand structural hazards before the next meeting.
 Notes: Celebrated the professor extending the deadline to March 8th. Ordered biryani to kick off the project.
+##
