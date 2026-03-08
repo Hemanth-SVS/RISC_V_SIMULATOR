@@ -321,7 +321,7 @@ void Simulator::wb_stage(const PipelineSlot &slot) {
 }
 
 void Simulator::print_stats() {
-    cout << "\n=== Simulation results ===\n";
+    cout << "\nSimulation results:\n";
     cout << "Cycles: " << cycles << "\n";
     cout << "Instructions retired: " << instr_executed << "\n";
     cout << "Stalls counted: " << stalls << "\n";
