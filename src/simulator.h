@@ -4,6 +4,7 @@
 #include "parser.h"
 #include "memory.h"
 #include "registers.h"
+#include "cache_hierarchy.h"
 #include <string>
 #include <map>
 #include <vector>
@@ -15,6 +16,7 @@ struct Config {
     map<string,int> latency;
     uint64_t max_cycles = 1000000;
     uint32_t data_base = 0x100;
+    CacheConfig cache_cfg;   // Phase 2
 };
 
 class Simulator {
@@ -28,9 +30,11 @@ private:
     Config cfg;
     Memory *mem;
     Registers regs;
+    CacheHierarchy *cache;       // Phase 2
     uint64_t cycles = 0;
     uint64_t instr_executed = 0;
     uint64_t stalls = 0;
+    uint64_t cache_stalls = 0;   // Phase 2
 
     struct PipelineSlot {
         bool valid = false;
@@ -44,6 +48,9 @@ private:
         uint32_t alu_result=0;
         uint32_t mem_addr=0;
         uint32_t mem_data=0;
+        int if_cycles_left = 0;       // Phase 2
+        int mem_cycles_left = 0;      // Phase 2
+        bool mem_latency_set = false; // Phase 2
     };
 
     vector<PipelineSlot> pipeline;

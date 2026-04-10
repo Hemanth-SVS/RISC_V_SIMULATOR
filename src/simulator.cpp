@@ -9,7 +9,7 @@
 using namespace std;
 
 Simulator::Simulator(const string &asm_file_, const string &config_file_)
-: asm_file(asm_file_), cfg_file(config_file_), mem(nullptr) {}
+: asm_file(asm_file_), cfg_file(config_file_), mem(nullptr), cache(nullptr) {}
 
 static string cfg_trim(const string &s) {
     auto t = trim(s);
@@ -51,12 +51,33 @@ void Simulator::load_config() {
         }
         else if (k=="max_cycles") cfg.max_cycles = stoull(v);
         else if (k=="data_base") cfg.data_base = stoul(v,nullptr,0);
+        // Phase 2: cache config
+        else if (k=="l1i_size") cfg.cache_cfg.l1i_size = stoi(v);
+        else if (k=="l1i_block_size") cfg.cache_cfg.l1i_block = stoi(v);
+        else if (k=="l1i_assoc") cfg.cache_cfg.l1i_assoc = stoi(v);
+        else if (k=="l1i_latency") cfg.cache_cfg.l1i_latency = stoi(v);
+        else if (k=="l1d_size") cfg.cache_cfg.l1d_size = stoi(v);
+        else if (k=="l1d_block_size") cfg.cache_cfg.l1d_block = stoi(v);
+        else if (k=="l1d_assoc") cfg.cache_cfg.l1d_assoc = stoi(v);
+        else if (k=="l1d_latency") cfg.cache_cfg.l1d_latency = stoi(v);
+        else if (k=="l2_size") cfg.cache_cfg.l2_size = stoi(v);
+        else if (k=="l2_block_size") cfg.cache_cfg.l2_block = stoi(v);
+        else if (k=="l2_assoc") cfg.cache_cfg.l2_assoc = stoi(v);
+        else if (k=="l2_latency") cfg.cache_cfg.l2_latency = stoi(v);
+        else if (k=="mem_latency") cfg.cache_cfg.mem_latency = stoi(v);
+        else if (k=="replacement_policy") {
+            if (v=="fifo" || v=="FIFO")
+                cfg.cache_cfg.policy = FIFO;
+            else
+                cfg.cache_cfg.policy = LRU;
+        }
     }
 }
 
 bool Simulator::load() {
     load_config();
     mem = new Memory(cfg.memory_size);
+    cache = new CacheHierarchy(cfg.cache_cfg);
     prog = parse_asm_file(asm_file);
 
     uint32_t next_free = cfg.data_base;
@@ -72,7 +93,7 @@ bool Simulator::load() {
 
     pipeline.clear();
     pc = 0;
-    cycles = stalls = instr_executed = 0;
+    cycles = stalls = cache_stalls = instr_executed = 0;
     return true;
 }
 
@@ -95,6 +116,12 @@ int Simulator::parse_imm_token(const string &s, bool &ok) {
 
 void Simulator::run() {
     cout << "Forwarding: " << (cfg.forwarding ? "ENABLED" : "DISABLED") << "\n";
+    cout << "Cache: L1I=" << cfg.cache_cfg.l1i_size << "B"
+         << " L1D=" << cfg.cache_cfg.l1d_size << "B"
+         << " L2=" << cfg.cache_cfg.l2_size << "B"
+         << " Block=" << cfg.cache_cfg.l1d_block << "B"
+         << " Policy=" << (cfg.cache_cfg.policy == LRU ? "LRU" : "FIFO") << "\n";
+
     const uint64_t MAXC = cfg.max_cycles;
     while (cycles < MAXC) {
         step_cycle();
@@ -118,18 +145,41 @@ void Simulator::step_cycle() {
         }
     }
 
-    // 2. Memory Stage
+    // 2. Memory Stage - now with variable latency (Phase 2)
     for (auto slot : pipeline) {
         if (slot.stage == 3) {
-            mem_stage(slot);
-            slot.stage = 4;
-            next_pipeline.push_back(slot);
+            // first time entering MEM, compute cache latency
+            if (!slot.mem_latency_set) {
+                string op = slot.ins.op;
+                if (op == "lw")
+                    slot.mem_cycles_left = cache->data_access(slot.mem_addr, false);
+                else if (op == "sw")
+                    slot.mem_cycles_left = cache->data_access(slot.mem_addr, true);
+                else
+                    slot.mem_cycles_left = 1;
+                slot.mem_latency_set = true;
+            }
+
+            if (slot.mem_cycles_left > 1) {
+                slot.mem_cycles_left--;
+                next_pipeline.push_back(slot);
+                stall = true;
+                cache_stalls++;
+            } else {
+                mem_stage(slot);
+                slot.stage = 4;
+                next_pipeline.push_back(slot);
+            }
         }
     }
 
     // 3. Execute Stage
     for (auto slot : pipeline) {
         if (slot.stage == 2) {
+            if (stall) {
+                next_pipeline.push_back(slot);
+                continue;
+            }
             if (slot.ex_cycles_left > 1) {
                 slot.ex_cycles_left--;
                 next_pipeline.push_back(slot);
@@ -154,7 +204,6 @@ void Simulator::step_cycle() {
             decode_stage(slot);
             bool hazard = false;
 
-            // Pipeline read state is now protected, hazard checks are perfectly accurate
             for (const auto &older : pipeline) {
                 if (older.stage == 2 || older.stage == 3) {
                     if (older.writes_rd && older.rd != 0) {
@@ -184,12 +233,20 @@ void Simulator::step_cycle() {
         }
     }
 
-    // 5. Fetch Stage
+    // 5. Fetch Stage - now with variable latency (Phase 2)
     for (auto slot : pipeline) {
         if (slot.stage == 0) {
             if (flush) continue;
             if (stall) {
                 next_pipeline.push_back(slot);
+                continue;
+            }
+
+            if (slot.if_cycles_left > 1) {
+                slot.if_cycles_left--;
+                next_pipeline.push_back(slot);
+                stall = true;
+                cache_stalls++;
             } else {
                 slot.stage = 1;
                 next_pipeline.push_back(slot);
@@ -206,6 +263,9 @@ void Simulator::step_cycle() {
         ns.ins = prog.instrs[pc];
         ns.pc_index = pc;
         ns.stage = 0;
+        // Phase 2: instruction fetch goes through L1I cache
+        uint32_t instr_addr = (uint32_t)pc * 4;
+        ns.if_cycles_left = cache->instruction_access(instr_addr);
         next_pipeline.push_back(ns);
         pc++;
     }
@@ -321,13 +381,17 @@ void Simulator::wb_stage(const PipelineSlot &slot) {
 }
 
 void Simulator::print_stats() {
-    cout << "\nSimulation results:\n";
+    cout << "\n=== Simulation Results ===" << "\n";
     cout << "Cycles: " << cycles << "\n";
     cout << "Instructions retired: " << instr_executed << "\n";
-    cout << "Stalls counted: " << stalls << "\n";
+    cout << "Total stalls: " << (stalls + cache_stalls) << "\n";
+    cout << "  Data hazard stalls: " << stalls << "\n";
+    cout << "  Cache stalls: " << cache_stalls << "\n";
 
     double ipc = (cycles>0) ? ((double)instr_executed / cycles) : 0;
     cout << "IPC: " << ipc << "\n";
+
+    cache->print_stats();
 
     if (prog.data_labels.count("array")) {
         uint32_t addr = prog.data_labels["array"];
