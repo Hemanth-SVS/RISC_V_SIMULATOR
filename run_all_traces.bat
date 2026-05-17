@@ -10,7 +10,7 @@ for /L %%i in (1,1,10) do (
     set "num=!num:~-2!"
     echo === Trace !num! === >> phase3_results.txt
     echo Running trace!num!...
-    simulator.exe phase3_traces\trace!num!.trace phase3_config.cfg >> phase3_results.txt 2>&1
+    simulator.exe phase3_traces\trace!num!.trace config.cfg >> phase3_results.txt 2>&1
     echo. >> phase3_results.txt
     echo. >> phase3_results.txt
 )
