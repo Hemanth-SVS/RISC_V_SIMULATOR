@@ -13,20 +13,32 @@ A 5-stage pipelined RISC-V simulator written in C++. It supports data forwarding
 - **Write policy:** Write-back with write-allocate
 - **Statistics output:** Cache miss rates, stall breakdown (data hazard vs cache), IPC
 
-## How to Build and Run
+## How to Build and Run (Final Phase 3 Version)
 
-### Option 1: Using Make (Linux / macOS)
-```bash
-make clean
-make
-./build/riscv_sim asm/bubble_sort.asm config.cfg
-```
-
-### Option 2: Manual Compilation (Windows PowerShell)
+### 1. Compiling the Simulator
+If you need to recompile the simulator, use the following commands:
 ```powershell
 cd src
 g++ -std=c++17 -O2 -Wall *.cpp -o simulator.exe
-.\simulator.exe ..\asm\bubble_sort.asm ..\config.cfg
+move simulator.exe ..\
+cd ..
+```
+
+### 2. Running Trace Replay Mode (Phase 3)
+To run all 10 traces automatically and save the results to `phase3_results.txt`:
+```powershell
+.\run_all_traces.bat
+```
+
+To run a single trace manually:
+```powershell
+.\simulator.exe phase3_traces\trace01.trace config.cfg
+```
+
+### 3. Running Assembly Mode (Phase 1 & 2)
+The simulator still supports executing `.asm` or `.s` files from earlier phases:
+```powershell
+.\simulator.exe asm\bubble_sort.asm config.cfg
 ```
 
 ## Configuration (config.cfg)
@@ -108,27 +120,19 @@ Memory Access (MEM)     ──► L1D Cache ──► L2 Cache ──► Main Me
 
 ## Minutes of Meeting
 
-Date: 15-May-2026
+Date: 22-Feb-2026
 Members: Hemanth, Santhosh, Jaswanth
-Accomplished: Finally finished Phase 3 Virtual Memory and Trace replay just before the deadline. 
-Decisions: Found a horrible bug where we were accessing the cache twice in trace mode and all traces had a fake 50% hit rate. Fixed it and realized traces 01-03 actually have a 0% hit rate because of strided accesses kicking out the direct-mapped cache blocks. Decided it's not a bug, it's just bad locality. 
-Tasks: Hemanth to push the final fixed version to GitHub right now so we don't get a late penalty. 
-Notes: We are running on zero sleep. If this doesn't compile on the TA's machine I'm going to cry.
+Accomplished: Read through the Phase 1 project document and RISC-V manual.
+Decisions: Chose C++ as our programming language for its performance and OOP features. Created the private GitHub repository early to avoid last-minute merge conflicts.
+Tasks: Everyone to review the standard 5-stage pipeline diagram and understand structural hazards before the next meeting.
+Notes: Celebrated the professor extending the deadline to March 8th. Ordered biryani to kick off the project.
 
-
-Date: 08-Mar-2026
+Date: 26-Feb-2026
 Members: Hemanth, Santhosh, Jaswanth
-Accomplished: Data forwarding logic is fully functional. Simulator successfully sorts the array without crashing.
-Decisions: Discovered that the jal x0, done infinite loop at the end of the assembly file was maxing out the cycle count to 1,000,000 and ruining the IPC calculation. Decided to delete the final jump to let the pipeline drain and exit gracefully.
-Tasks: Hemanth to run final validation tests, push the finalized code to the private GitHub repository, and add coa2026iittp as a collaborator before 11:59 PM.
-Notes: Stressed about the deadline. Decided to skip dinner until the repo is successfully pushed to GitHub.
-
-Date: 06-Mar-2026
-Members: Hemanth, Santhosh, Jaswanth
-Accomplished: The 5-stage pipeline is running, but the array output is completely unsorted.
-Decisions: Spent 2 hours debugging a C++ std::invalid_argument exception before realizing stoi() was failing on non-numeric data labels like n(x0). Decided to build a parse_imm_token helper to resolve labels into memory addresses. Also found an out-of-bounds memory bug in bubble_sort.asm where it was sorting the n variable into the array.
-Tasks: Hemanth to implement the parse_imm_token logic in the Decode stage. Santhosh to fix the inner loop condition in the assembly file to stop at j < n - 1.
-Notes: Had Maggi at the hostel canteen at 2 AM while trying to figure out why bne wasn't branching.
+Accomplished: Project repo is set up. Dummy Makefile created.
+Decisions: Finalized our custom instruction set (ADD, SUB, BNE, JAL, LW, SW, ADDI, SLT). Decided to represent simulated memory as a simple std::vector<uint8_t> of size 8192 bytes.
+Tasks: Santhosh to write the initial bubble_sort.asm code. Jaswanth to build parser.cpp to read assembly strings. Hemanth to build the registers.cpp and memory.cpp classes.
+Deadline: Have all individual components ready to merge into simulator.cpp by March 2nd.
 
 Date: 03-Mar-2026
 Members: Hemanth, Santhosh, Jaswanth
@@ -138,19 +142,26 @@ Tasks: Jaswanth to write the dynamic latency tracking using the config.cfg file.
 Deadline: Pipeline restructuring to be done by March 5th.
 Notes: Argued for 20 minutes about how data forwarding actually works in the Execute stage.
 
-Date: 26-Feb-2026
+Date: 06-Mar-2026
 Members: Hemanth, Santhosh, Jaswanth
-Accomplished: Project repo is set up. Dummy Makefile created.
-Decisions: Finalized our custom instruction set (ADD, SUB, BNE, JAL, LW, SW, ADDI, SLT). Decided to represent simulated memory as a simple std::vector<uint8_t> of size 8192 bytes.
-Tasks: Santhosh to write the initial bubble_sort.asm code. Jaswanth to build parser.cpp to read assembly strings. Hemanth to build the registers.cpp and memory.cpp classes.
-Deadline: Have all individual components ready to merge into simulator.cpp by March 2nd.
+Accomplished: The 5-stage pipeline is running, but the array output is completely unsorted.
+Decisions: Spent 2 hours debugging a C++ std::invalid_argument exception before realizing stoi() was failing on non-numeric data labels like n(x0). Decided to build a parse_imm_token helper to resolve labels into memory addresses. Also found an out-of-bounds memory bug in bubble_sort.asm where it was sorting the n variable into the array.
+Tasks: Hemanth to implement the parse_imm_token logic in the Decode stage. Santhosh to fix the inner loop condition in the assembly file to stop at j < n - 1.
+Notes: Had Maggi at the hostel canteen at 2 AM while trying to figure out why bne wasn't branching.
 
-Date: 22-Feb-2026
+Date: 08-Mar-2026
 Members: Hemanth, Santhosh, Jaswanth
-Accomplished: Read through the Phase 1 project document and RISC-V manual.
-Decisions: Chose C++ as our programming language for its performance and OOP features. Created the private GitHub repository early to avoid last-minute merge conflicts.
-Tasks: Everyone to review the standard 5-stage pipeline diagram and understand structural hazards before the next meeting.
-Notes: Celebrated the professor extending the deadline to March 8th. Ordered biryani to kick off the project.
+Accomplished: Data forwarding logic is fully functional. Simulator successfully sorts the array without crashing.
+Decisions: Discovered that the jal x0, done infinite loop at the end of the assembly file was maxing out the cycle count to 1,000,000 and ruining the IPC calculation. Decided to delete the final jump to let the pipeline drain and exit gracefully.
+Tasks: Hemanth to run final validation tests, push the finalized code to the private GitHub repository, and add coa2026iittp as a collaborator before 11:59 PM.
+Notes: Stressed about the deadline. Decided to skip dinner until the repo is successfully pushed to GitHub.
+
+Date: 15-May-2026
+Members: Hemanth, Santhosh, Jaswanth
+Accomplished: Finally finished Phase 3 Virtual Memory and Trace replay just before the deadline. 
+Decisions: Found a horrible bug where we were accessing the cache twice in trace mode and all traces had a fake 50% hit rate. Fixed it and realized traces 01-03 actually have a 0% hit rate because of strided accesses kicking out the direct-mapped cache blocks. Decided it's not a bug, it's just bad locality. 
+Tasks: Hemanth to push the final fixed version to GitHub right now so we don't get a late penalty. 
+Notes: We are running on zero sleep. If this doesn't compile on the TA's machine I'm going to cry.
 
 ---
 
@@ -270,17 +281,3 @@ Replacement policy = LRU
 - **L1I = 0 accesses is correct**: In trace mode, instructions come from the trace file, not memory. So no instruction fetch happens here.
 - **No L2 cache**: All L1 misses go straight to main memory (100 cycle latency) - this is a huge performance bottleneck but the specs said no L2 so whatever.
 
-## Running the Simulator
-
-```bash
-# Trace mode (auto-detected from .trace extension)
-./simulator.exe <trace_file>.trace <config_file>
-
-# Assembly mode (default)
-./simulator.exe <asm_file>.s <config_file>
-```
-
-Example:
-```bash
-./simulator.exe trace01.trace config.cfg
-```
