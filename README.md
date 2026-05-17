@@ -108,6 +108,14 @@ Memory Access (MEM)     ──► L1D Cache ──► L2 Cache ──► Main Me
 
 ## Minutes of Meeting
 
+Date: 15-May-2026
+Members: Hemanth, Santhosh, Jaswanth
+Accomplished: Finally finished Phase 3 Virtual Memory and Trace replay just before the deadline. 
+Decisions: Found a horrible bug where we were accessing the cache twice in trace mode and all traces had a fake 50% hit rate. Fixed it and realized traces 01-03 actually have a 0% hit rate because of strided accesses kicking out the direct-mapped cache blocks. Decided it's not a bug, it's just bad locality. 
+Tasks: Hemanth to push the final fixed version to GitHub right now so we don't get a late penalty. 
+Notes: We are running on zero sleep. If this doesn't compile on the TA's machine I'm going to cry.
+
+
 Date: 08-Mar-2026
 Members: Hemanth, Santhosh, Jaswanth
 Accomplished: Data forwarding logic is fully functional. Simulator successfully sorts the array without crashing.

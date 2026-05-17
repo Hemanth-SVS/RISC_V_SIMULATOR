@@ -1,0 +1,311 @@
+ 
+=== Trace 01 === 
+Forwarding: ENABLED
+Cache: L1I=1024B L1D=4096B L2=0B Block=64B Policy=LRU
+Virtual Memory: DTLB=16 VPN=131072 PFN=64 Page=4096B Policy=LRU
+Trace Mode: ENABLED
+
+=== Simulation Results ===
+Cycles: 37081560
+Instructions retired: 715724
+Total stalls: 36007969
+  Data hazard stalls: 221297
+  Cache stalls: 35786200
+  VM translation stalls: 472
+IPC: 0.0193013
+
+=== Cache Statistics ===
+L1I: accesses=0, hits=0, misses=0, miss_rate=0%
+L1D: accesses=357862, hits=0, misses=357862, miss_rate=100%
+L2:  accesses=0, hits=0, misses=0, miss_rate=0%
+
+=== Virtual Memory Statistics ===
+TLB hits: 357854
+TLB misses: 8
+Page walks: 8
+Page faults: 8
+Page evictions: 0
+Dirty evictions (writebacks): 0
+Total translation penalty cycles: 358334
+TLB hit rate: 99.9978%
+ 
+ 
+=== Trace 02 === 
+Forwarding: ENABLED
+Cache: L1I=1024B L1D=4096B L2=0B Block=64B Policy=LRU
+Virtual Memory: DTLB=16 VPN=131072 PFN=64 Page=4096B Policy=LRU
+Trace Mode: ENABLED
+
+=== Simulation Results ===
+Cycles: 37066899
+Instructions retired: 715704
+Total stalls: 35993338
+  Data hazard stalls: 207194
+  Cache stalls: 35785200
+  VM translation stalls: 944
+IPC: 0.0193084
+
+=== Cache Statistics ===
+L1I: accesses=0, hits=0, misses=0, miss_rate=0%
+L1D: accesses=357852, hits=0, misses=357852, miss_rate=100%
+L2:  accesses=0, hits=0, misses=0, miss_rate=0%
+
+=== Virtual Memory Statistics ===
+TLB hits: 357836
+TLB misses: 16
+Page walks: 16
+Page faults: 16
+Page evictions: 0
+Dirty evictions (writebacks): 0
+Total translation penalty cycles: 358796
+TLB hit rate: 99.9955%
+ 
+ 
+=== Trace 03 === 
+Forwarding: ENABLED
+Cache: L1I=1024B L1D=4096B L2=0B Block=64B Policy=LRU
+Virtual Memory: DTLB=16 VPN=131072 PFN=64 Page=4096B Policy=LRU
+Trace Mode: ENABLED
+
+=== Simulation Results ===
+Cycles: 38680142
+Instructions retired: 715752
+Total stalls: 37606509
+  Data hazard stalls: 207536
+  Cache stalls: 35787600
+  VM translation stalls: 1611373
+IPC: 0.0185044
+
+=== Cache Statistics ===
+L1I: accesses=0, hits=0, misses=0, miss_rate=0%
+L1D: accesses=357876, hits=0, misses=357876, miss_rate=100%
+L2:  accesses=0, hits=0, misses=0, miss_rate=0%
+
+=== Virtual Memory Statistics ===
+TLB hits: 178929
+TLB misses: 178947
+Page walks: 178947
+Page faults: 17
+Page evictions: 0
+Dirty evictions (writebacks): 0
+Total translation penalty cycles: 1969249
+TLB hit rate: 49.9975%
+ 
+ 
+=== Trace 04 === 
+Forwarding: ENABLED
+Cache: L1I=1024B L1D=4096B L2=0B Block=64B Policy=LRU
+Virtual Memory: DTLB=16 VPN=131072 PFN=64 Page=4096B Policy=LRU
+Trace Mode: ENABLED
+
+=== Simulation Results ===
+Cycles: 37541251
+Instructions retired: 715728
+Total stalls: 36467654
+  Data hazard stalls: 193636
+  Cache stalls: 34658700
+  VM translation stalls: 1615318
+IPC: 0.0190651
+
+=== Cache Statistics ===
+L1I: accesses=0, hits=0, misses=0, miss_rate=0%
+L1D: accesses=357864, hits=11277, misses=346587, miss_rate=96.8488%
+L2:  accesses=0, hits=0, misses=0, miss_rate=0%
+
+=== Virtual Memory Statistics ===
+TLB hits: 178562
+TLB misses: 179302
+Page walks: 179302
+Page faults: 32
+Page evictions: 0
+Dirty evictions (writebacks): 0
+Total translation penalty cycles: 1973182
+TLB hit rate: 49.8966%
+ 
+ 
+=== Trace 05 === 
+Forwarding: ENABLED
+Cache: L1I=1024B L1D=4096B L2=0B Block=64B Policy=LRU
+Virtual Memory: DTLB=16 VPN=131072 PFN=64 Page=4096B Policy=LRU
+Trace Mode: ENABLED
+
+=== Simulation Results ===
+Cycles: 40108678
+Instructions retired: 715732
+Total stalls: 39035075
+  Data hazard stalls: 193099
+  Cache stalls: 35778200
+  VM translation stalls: 3063776
+IPC: 0.0178448
+
+=== Cache Statistics ===
+L1I: accesses=0, hits=0, misses=0, miss_rate=0%
+L1D: accesses=357866, hits=84, misses=357782, miss_rate=99.9765%
+L2:  accesses=0, hits=0, misses=0, miss_rate=0%
+
+=== Virtual Memory Statistics ===
+TLB hits: 17802
+TLB misses: 340064
+Page walks: 340064
+Page faults: 64
+Page evictions: 0
+Dirty evictions (writebacks): 0
+Total translation penalty cycles: 3421642
+TLB hit rate: 4.97449%
+ 
+ 
+=== Trace 06 === 
+Forwarding: ENABLED
+Cache: L1I=1024B L1D=4096B L2=0B Block=64B Policy=LRU
+Virtual Memory: DTLB=16 VPN=131072 PFN=64 Page=4096B Policy=LRU
+Trace Mode: ENABLED
+
+=== Simulation Results ===
+Cycles: 42055404
+Instructions retired: 715728
+Total stalls: 40981807
+  Data hazard stalls: 193115
+  Cache stalls: 34051500
+  VM translation stalls: 6737192
+IPC: 0.0170187
+
+=== Cache Statistics ===
+L1I: accesses=0, hits=0, misses=0, miss_rate=0%
+L1D: accesses=357864, hits=17349, misses=340515, miss_rate=95.1521%
+L2:  accesses=0, hits=0, misses=0, miss_rate=0%
+
+=== Virtual Memory Statistics ===
+TLB hits: 53426
+TLB misses: 304438
+Page walks: 304438
+Page faults: 79945
+Page evictions: 79881
+Dirty evictions (writebacks): 26124
+Total translation penalty cycles: 7095056
+TLB hit rate: 14.9291%
+ 
+ 
+=== Trace 07 === 
+Forwarding: ENABLED
+Cache: L1I=1024B L1D=4096B L2=0B Block=64B Policy=LRU
+Virtual Memory: DTLB=16 VPN=131072 PFN=64 Page=4096B Policy=LRU
+Trace Mode: ENABLED
+
+=== Simulation Results ===
+Cycles: 40276675
+Instructions retired: 715736
+Total stalls: 39203066
+  Data hazard stalls: 96924
+  Cache stalls: 34774600
+  VM translation stalls: 4331542
+IPC: 0.0177705
+
+=== Cache Statistics ===
+L1I: accesses=0, hits=0, misses=0, miss_rate=0%
+L1D: accesses=357868, hits=10122, misses=347746, miss_rate=97.1716%
+L2:  accesses=0, hits=0, misses=0, miss_rate=0%
+
+=== Virtual Memory Statistics ===
+TLB hits: 208880
+TLB misses: 148988
+Page walks: 148988
+Page faults: 59813
+Page evictions: 59749
+Dirty evictions (writebacks): 53538
+Total translation penalty cycles: 4689410
+TLB hit rate: 58.3679%
+ 
+ 
+=== Trace 08 === 
+Forwarding: ENABLED
+Cache: L1I=1024B L1D=4096B L2=0B Block=64B Policy=LRU
+Virtual Memory: DTLB=16 VPN=131072 PFN=64 Page=4096B Policy=LRU
+Trace Mode: ENABLED
+
+=== Simulation Results ===
+Cycles: 37193086
+Instructions retired: 715740
+Total stalls: 36119471
+  Data hazard stalls: 221547
+  Cache stalls: 19205800
+  VM translation stalls: 16692124
+IPC: 0.0192439
+
+=== Cache Statistics ===
+L1I: accesses=0, hits=0, misses=0, miss_rate=0%
+L1D: accesses=357870, hits=165812, misses=192058, miss_rate=53.667%
+L2:  accesses=0, hits=0, misses=0, miss_rate=0%
+
+=== Virtual Memory Statistics ===
+TLB hits: 17584
+TLB misses: 340286
+Page walks: 340286
+Page faults: 272591
+Page evictions: 272527
+Dirty evictions (writebacks): 56298
+Total translation penalty cycles: 17049994
+TLB hit rate: 4.91352%
+ 
+ 
+=== Trace 09 === 
+Forwarding: ENABLED
+Cache: L1I=1024B L1D=4096B L2=0B Block=64B Policy=LRU
+Virtual Memory: DTLB=16 VPN=131072 PFN=64 Page=4096B Policy=LRU
+Trace Mode: ENABLED
+
+=== Simulation Results ===
+Cycles: 37462820
+Instructions retired: 715752
+Total stalls: 36389187
+  Data hazard stalls: 179514
+  Cache stalls: 24012900
+  VM translation stalls: 12196773
+IPC: 0.0191057
+
+=== Cache Statistics ===
+L1I: accesses=0, hits=0, misses=0, miss_rate=0%
+L1D: accesses=357876, hits=117747, misses=240129, miss_rate=67.0984%
+L2:  accesses=0, hits=0, misses=0, miss_rate=0%
+
+=== Virtual Memory Statistics ===
+TLB hits: 34879
+TLB misses: 322997
+Page walks: 322997
+Page faults: 185796
+Page evictions: 185732
+Dirty evictions (writebacks): 69002
+Total translation penalty cycles: 12554649
+TLB hit rate: 9.74611%
+ 
+ 
+=== Trace 10 === 
+Forwarding: ENABLED
+Cache: L1I=1024B L1D=4096B L2=0B Block=64B Policy=LRU
+Virtual Memory: DTLB=16 VPN=131072 PFN=64 Page=4096B Policy=LRU
+Trace Mode: ENABLED
+
+=== Simulation Results ===
+Cycles: 36731863
+Instructions retired: 715712
+Total stalls: 35658290
+  Data hazard stalls: 193825
+  Cache stalls: 33959800
+  VM translation stalls: 1504665
+IPC: 0.0194848
+
+=== Cache Statistics ===
+L1I: accesses=0, hits=0, misses=0, miss_rate=0%
+L1D: accesses=357856, hits=18258, misses=339598, miss_rate=94.8979%
+L2:  accesses=0, hits=0, misses=0, miss_rate=0%
+
+=== Virtual Memory Statistics ===
+TLB hits: 285071
+TLB misses: 72785
+Page walks: 72785
+Page faults: 16992
+Page evictions: 16928
+Dirty evictions (writebacks): 12348
+Total translation penalty cycles: 1862521
+TLB hit rate: 79.6608%
+ 
+ 

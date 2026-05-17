@@ -35,21 +35,28 @@ int CacheHierarchy::data_access(uint32_t addr, bool is_write) {
     bool hit = l1d.access(addr, is_write);
     if (hit) return l1d.get_latency();
 
-    // L1D miss, check L2
-    hit = l2.access(addr, is_write);
-    if (hit) {
+    // L1D miss, check L2 (if enabled)
+    if (l2.get_latency() > 0) {
+        hit = l2.access(addr, is_write);
+        if (hit) {
+            bool ev_dirty; uint32_t ev_addr;
+            l1d.install(addr, is_write, ev_dirty, ev_addr);
+            if (ev_dirty) l2.access(ev_addr, true);
+            return l1d.get_latency() + l2.get_latency();
+        }
+
+        // L2 miss, go to main memory
         bool ev_dirty; uint32_t ev_addr;
+        l2.install(addr, is_write, ev_dirty, ev_addr);
         l1d.install(addr, is_write, ev_dirty, ev_addr);
         if (ev_dirty) l2.access(ev_addr, true);
-        return l1d.get_latency() + l2.get_latency();
+        return l1d.get_latency() + l2.get_latency() + mem_latency;
+    } else {
+        // No L2 cache, go directly to main memory
+        bool ev_dirty; uint32_t ev_addr;
+        l1d.install(addr, is_write, ev_dirty, ev_addr);
+        return l1d.get_latency() + mem_latency;
     }
-
-    // L2 miss, go to main memory
-    bool ev_dirty; uint32_t ev_addr;
-    l2.install(addr, is_write, ev_dirty, ev_addr);
-    l1d.install(addr, is_write, ev_dirty, ev_addr);
-    if (ev_dirty) l2.access(ev_addr, true);
-    return l1d.get_latency() + l2.get_latency() + mem_latency;
 }
 
 void CacheHierarchy::print_stats() {
